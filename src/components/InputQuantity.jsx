@@ -16,7 +16,7 @@ const InputQuantity = ({ value, updateQuantity, isCart, remove }) => {
             setQuantity(i)
             updateQuantity(i)
         }
-        if(i === 1 && isCart) remove()
+        if(parseInt(quantity) === 1 && isCart) remove()
     }
 
     return (
