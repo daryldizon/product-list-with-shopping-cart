@@ -3,6 +3,7 @@ import Papa from 'papaparse';
 import ShoppingCart from './components/ShoppingCart';
 import ProductList from './components/ProductList';
 import InputSelect from './components/InputSelect';
+import Swal from 'sweetalert2'
 
 const App = () => {
   const [data, setData] = useState([])
@@ -19,6 +20,18 @@ const App = () => {
   const [categories, setCategories] = useState([])
 
   const [search, setSearchProduct] = useState("")
+   
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
 
   useEffect(() => {
     async function getProducts() {
@@ -58,6 +71,11 @@ const App = () => {
 
     setShoppingCart(cart)
     window.localStorage.setItem('ShoppingCart', JSON.stringify(cart)); // save to session
+
+    Toast.fire({
+      icon: 'success',
+      title: `${product.display_name} (${product.quantity ?? 1} pc/s) has been added to your cart!`
+    })
   }
   const updateItem = (product, quantity) => { 
     const exist = shoppingCart.find((x) => x.id === product.id);
@@ -76,6 +94,11 @@ const App = () => {
     
     setShoppingCart([...items])
     window.localStorage.setItem('ShoppingCart', JSON.stringify([...items])); // save to session
+
+    Toast.fire({
+      icon: 'info',
+      title: `${item.display_name} has been removed to your cart!`
+    })
   }
   const updateCategory = (select) => {
     setSearchProduct("")
